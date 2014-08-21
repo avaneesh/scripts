@@ -12,7 +12,8 @@ hardstatus alwayslastline
 #hardstatus string "%{.bW}%-w%{.rW}%n %t%{-}%+w %=%{..G} %H %{..Y} %m/%d %C%a "
 
 # colors are destracting. Here is transperant one.
-hardstatus string "%{= 9g}[ %{G}%H %{= 9g}][%= %{= 9B}%?%-Lw%?%{= 9R}(%{B}%n*%f %t%?(%u)%?%{= 9R})%{= 9B}%?%+Lw%?%?%= %{g}][%{Y}%l%{g}]%{= C}[ %m/%d/%y %c ]%{W}"
+hardstatus string "%{= 9g}[ %{G}%H %{= 9g}][%= %{= 9B}%?%-Lw%?%{= 9R}(%{B}%n*%f %t%?(%u)%?%{= 9R})%{= 9B}%?%+Lw%?%?%= %{g}]%{= C}[ %m/%d/%y %c ]%{W}"
+#hardstatus string "%{= 9g}[ %{G}%H %{= 9g}][%= %{= 9B}%?%-Lw%?%{= 9R}(%{B}%n*%f %t%?(%u)%?%{= 9R})%{= 9B}%?%+Lw%?%?%= %{g}][%{Y}%l%{g}]%{= C}[ %m/%d/%y %c ]%{W}"
 #hardstatus string "[        %{= 9w}%?%-Lw%?%{= 9R}(%{W}%n*%f %t%?(%u)%?%{= 9R})%{= 9w}%?%+Lw%?%?%= %{g}]"
 
 
@@ -21,11 +22,11 @@ bind c screen 1
 bind 0 select 10
 
 #set the buffer file (to get the pasted text)
-bufferfile ~/screen_logs
+bufferfile /users/$USER/screen_logs
 
 
 
-setenv MC_PASSWORD   "rock"     # Super user password                      #
+setenv MC_PASSWORD   "rock"     # Super User Password                      #
 
 
 #=====================================================================================#

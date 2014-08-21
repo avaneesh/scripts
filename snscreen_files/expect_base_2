@@ -12,6 +12,6 @@ set timeout 2
 #expect "Password: "
 #send "$MC_PASSWORD\r"
 
-expect -re ".*$"
+#expect -re ".*$"
 
 
