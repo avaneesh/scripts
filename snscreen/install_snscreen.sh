@@ -15,14 +15,16 @@ if [[ $snscreen_dir != `pwd` ]]; then
 		fi
 	fi
 	mkdir -p $snscreen_dir
-	cp * $snscreen_dir/.
+	cp utils/* $snscreen_dir/.
+	cp README_sample.txt $snscreen_dir/.
+	cp syntax_of_README.txt $snscreen_dir/.
 fi
 
 if [[ ! -d $snscreen_binary_dir ]]; then
 	echo "'$snscreen_binary_dir' does not exist, creating it..."
 	mkdir -p $snscreen_binary_dir
 fi
-cp snscreen $snscreen_binary_dir/.
+cp utils/snscreen $snscreen_binary_dir/.
 
 echo "Congratulations!!! snscreen is ready to be used."
 echo "Please make sure that '$snscreen_binary_dir' is in your PATH"
