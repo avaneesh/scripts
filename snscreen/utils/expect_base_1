@@ -1,0 +1,18 @@
+#!/usr/bin/expect
+
+set MC_PASSWORD     [lindex $argv 0]
+
+set timeout 2
+
+# password needs to be entered twice. Donno why
+
+spawn bash
+#spawn su
+#expect "Password: "
+#send "$MC_PASSWORD\r"
+#expect "Password: "
+#send "$MC_PASSWORD\r"
+
+expect -re ".*$"
+
+

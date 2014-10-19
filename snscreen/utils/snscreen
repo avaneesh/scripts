@@ -1,0 +1,199 @@
+#! /bin/bash
+
+#
+# Author: Avaneesh Kadam (avkadam@cisco.com)
+#
+# Copyright (c) 2012-2014 by Avaneesh Kadam <avkadam@cisco.com>
+#
+#
+
+
+# Remove temporary files from previous run
+rm ~/snscreen_files/tmp_expect*
+
+# Set base files from which this script creates final files
+EXPECT_BASE_FILE=~/snscreen_files/expect_base_1
+SCREENRC_BASE_FILE=~/snscreen_files/screenrc_setup_1
+
+# Set the guard pattern to cover the window name
+GUARD_PATTERN="^==="
+
+# Declare search states. Script is in any of these states at any point of time
+# SERACHING_FOR_GUARD1 :
+#    Skip anything that appears prior to first guard pattern
+#    Next state is SERACHING_FOR_NAME
+
+# SERACHING_FOR_NAME :
+#    Searching for window name. A line starting with "WINDOW"
+#    Next state is SERACHING_FOR_GUARD2
+
+# SERACHING_FOR_GUARD2 :
+#    Find the closing GUARD_PATTERN
+#    Next state is SERACHING_FOR_GUARD1_CREATING_EXPECT
+
+# SERACHING_FOR_GUARD1_CREATING_EXPECT :
+#    Window name was found. Create Expect script for this window using the commands that follow
+#    Every line should be a shell command that will be sent to the screen_window using Expect
+#    Next state is SERACHING_FOR_NAME (if GUARD_PATTERN is found)
+
+SERACHING_FOR_GUARD1=0
+SERACHING_FOR_NAME=1
+SERACHING_FOR_GUARD2=2
+SERACHING_FOR_GUARD1_CREATING_EXPECT=3
+
+
+# temporary variable initialization
+num_windows=0
+unused_window=0
+search_state=0
+find_window_name=0
+start_creating_expect_script=0
+
+# API to process the line read from the README
+process_line(){
+  line="$@" # get all args
+    if [ $search_state == $SERACHING_FOR_GUARD1 ] ; then
+      matched_1=`echo $line | grep "$GUARD_PATTERN"`
+      if [ ${#matched_1} != 0 ] ; then
+        search_state=$SERACHING_FOR_NAME
+      fi
+      return
+    fi
+    
+    if [ $search_state == $SERACHING_FOR_NAME ] ; then
+      matched_1=`echo $line | grep "^WINDOW "`
+      if [ ${#matched_1} != 0 ] ; then
+        echo ${line:7}
+        search_state=$SERACHING_FOR_GUARD2
+      else
+        echo "Parser error. Expecting WINDOW after $GUARD_PATTERN"
+        exit 1
+      fi
+
+      # If the line contains "UNUSED", skip this entire window
+      matched_1=`echo $line | grep "UNUSED"`
+      if [ ${#matched_1} != 0 ] ; then
+        unused_window=1
+      else
+        unused_window=0
+          
+        # We know the window name. Append it in the list of names of all windows
+        echo $line > ~/snscreen_files/tmp_expect_tmp_file
+        sc_name=`cut -f2 -d' ' ~/snscreen_files/tmp_expect_tmp_file`
+        sc_name_list=$sc_name_list" "$sc_name
+        
+        # Create the corresponding Expect script
+        cp $EXPECT_BASE_FILE ~/snscreen_files/tmp_expect_$sc_name
+        num_windows=`expr $num_windows + 1`
+      fi
+      return
+    fi
+   
+    if [ $search_state == $SERACHING_FOR_GUARD2 ] ; then
+      matched_1=`echo $line | grep "$GUARD_PATTERN"`
+      if [ ${#matched_1} != 0 ] ; then
+        search_state=$SERACHING_FOR_GUARD1_CREATING_EXPECT
+      else
+        echo "Parser error. Expecting guard $GUARD_PATTERN after WINDOW"
+        exit 1
+      fi
+      return
+    fi
+
+    if [ $search_state == $SERACHING_FOR_GUARD1_CREATING_EXPECT ] ; then
+      matched_1=`echo $line | grep "$GUARD_PATTERN"`
+      if [ ${#matched_1} != 0 ] ; then
+        search_state=$SERACHING_FOR_NAME
+      else
+        # For unused window, we do not have expect file
+        if [ $unused_window == 0 ] ; then
+          # If the commad has "$", it needs to be escaped before creating expect command
+          out_line=${line//$/\\$}
+          # if the line starts with "##", it is general comment in a README. Do not consider this as a command
+          out_line=`echo $out_line | grep -v "^##"`
+          if [ ${#out_line} != 0 ] ; then
+            # If the line passed above checks, create a expect command out of it. This line will be executed on target screen window as a normal shell command.
+            echo 'send "'$out_line'\r"' >> ~/snscreen_files/tmp_expect_$sc_name
+            echo 'expect -re ".*(#|$)"' >> ~/snscreen_files/tmp_expect_$sc_name
+            
+          fi  
+        #else
+          #echo "---------------------------------------"
+        fi
+      fi
+      return
+    fi
+}
+
+
+### Main script stars here ###
+# Store file name
+FILE=""
+ 
+# Make sure we get file name as command line argument
+# Else read it from standard input device
+file_name=""
+if [ "$1" == "" ]; then
+  echo "README not provided. Using blank"
+  exit 1
+else
+  FILE=README_"$1"
+  #FILE=$1
+  # make sure file exist and readable
+  if [ ! -f $FILE ]; then
+    echo "$FILE : does not exists"
+    exit 1
+  elif [ ! -r $FILE ]; then
+    echo "$FILE: can not read"
+    exit 2
+  fi
+fi
+# read $FILE using the file descriptors
+                             
+
+
+# Set loop separator to end of line
+BAKIFS=$IFS
+IFS=$(echo -en "\n\b")
+exec 3<&0
+exec 0<"$FILE"
+while read -r line
+do
+  # use $line variable to process line in process_line() function
+  process_line $line
+done
+exec 0<&3
+   
+# restore $IFS which was used to determine what the field separators are
+IFS=$BAKIFS
+
+
+
+
+# Done with README file reading 
+
+
+# names of all the required screen window names are listed here
+echo $sc_name_list > ~/snscreen_files/tmp_expect_names
+
+# Start creating .screenrc file
+cp $SCREENRC_BASE_FILE ~/.screenrc_setup_current
+idx=1
+while [ $idx -le $num_windows ]
+do
+  # cut the indexed column to find out current window name
+  sc_name=`cut -f$idx -d' ' ~/snscreen_files/tmp_expect_names`
+  echo $idx
+  echo "interact" >> ~/snscreen_files/tmp_expect_$sc_name
+  echo "screen -t   $sc_name        $idx       $HOME/snscreen_files/tmp_expect_$sc_name \$MC_PASSWORD" >> ~/.screenrc_setup_current
+  idx=`expr $idx + 1`
+done
+
+# Make the 2nd window as current window (just because i generally run boxer in window 2)
+echo "select 2" >> ~/.screenrc_setup_current
+
+# assign session name so that "screen -x <name>" resumes this session
+echo "sessionname" $1 >> ~/.screenrc_setup_current
+
+# Start the screen with the autogenerated screenrc file
+screen -c $HOME/.screenrc_setup_current
