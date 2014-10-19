@@ -1,0 +1,20 @@
+
+- Once you install, snscreen binary should be in your PATH
+- Run 'snscreen mytest01'
+- This will look for README_mytest01 file in current directory
+- In README_mytest01, you will specifiy windows that you want and respective commands that you want to be executed
+- snscreen automatically sets session name to mytest01 which will come in handy when you want to resume it
+
+
+- README_sample: provides a sample
+- syntax_of_README.txt: explains syntax of README file in detail
+
+--- To try out the sample readme, simply execute:
+snscreen sample
+
+
+
+===== Prerequisites:
+snscreen requires following tools to be already installed:
+1. expect
+2. screen
