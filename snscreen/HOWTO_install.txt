@@ -1,0 +1,5 @@
+
+Installation is simple:
+- Clone using git
+- Run install_snscreen.sh and follow instructions as and when it tells you
+
