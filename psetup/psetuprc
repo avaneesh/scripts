@@ -1,0 +1,3 @@
+
+BASE_README_FILENAME=README_psetup_sample_03
+DEVICE_DATABASE_CMD=showlocks

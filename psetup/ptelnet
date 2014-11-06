@@ -1,0 +1,9 @@
+#!/bin/bash
+
+tstring=`rwhere $1 | awk '{split($0,arr,"")} END{print $2}'`
+
+tport=`echo $tstring | cut -d':' -f 2`
+tip=`echo $tstring | cut -d':' -f 1`
+
+echo got $tip $tport
+telnet $tip $tport

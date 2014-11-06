@@ -1,0 +1,8 @@
+#!/bin/bash
+
+tstring=`rwhere $1 | awk '{split($0,arr,"")} END{print $4}'`
+
+tip=`echo $tstring | cut -d':' -f 1`
+
+echo got $tip
+telnet $tip

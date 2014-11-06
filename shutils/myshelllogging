@@ -1,0 +1,42 @@
+#!/bin/bash
+
+#
+# Author: Avaneesh Kadam (avaneesh.kadam@gmail.com)
+#
+# Copyright (c) 2012-2014 by Avaneesh Kadam <avaneesh.kadam@gmail.com>
+#
+# You are free to copy/change/distribute this code as long as
+# this copyright notice is kept intact. Yeah?
+#
+
+
+# Callers should set these variables according to their needs AFTER sourcing this file
+# switch to turn on debug logs 
+debugon=0
+# verbose level can be 0 to n. Currently n is 5.
+current_verbose_level=2
+
+# when people source us, remove pre-existing aliases and define them
+unalias -a decho v1echo v2echo v3echo
+
+
+# Log a debug message
+decho ()
+{
+  [ $debugon -eq 1 ] && echo Debug: "$@"
+}
+
+v1echo ()
+{
+  [ $current_verbose_level -ge 1 ] && echo Log: "$@"
+}
+v2echo ()
+{
+  [ $current_verbose_level -ge 2 ] && echo Log: "$@"
+}
+v3echo ()
+{
+  [ $current_verbose_level -ge 3 ] && echo Log: "$@"
+}
+
+

@@ -1,0 +1,35 @@
+====
+WINDOW general 1
+====
+vi new_file
+
+====
+WINDOW PREPLACE_README_FILE_TAG 1
+====
+vi PREPLACE_README_FILE
+
+====
+WINDOW PREPLACE_DEVICE_NAME 1
+====
+#ptelnet PREPLACE_DEVICE_NAME
+gcons PREPLACE_DEVICE_NAME
+
+====
+WINDOW PREPLACE_DEVICE_NAME_LINUX 2
+====
+pltelnet PREPLACE_DEVICE_NAME
+
+====
+WINDOW PREPLACE_DEVICE_NAME_EXTRA_1 4
+====
+# dummy command for PREPLACE_DEVICE_NAME
+
+====
+WINDOW PREPLACE_EXTRA_1 5
+====
+# extra window 1
+
+====
+WINDOW PREPLACE_EXTRA_2 5
+====
+# extra window 3

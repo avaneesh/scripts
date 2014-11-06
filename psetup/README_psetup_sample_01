@@ -1,0 +1,25 @@
+====
+WINDOW PREPLACE_DEVICE_NAME 1
+====
+#ptelnet PREPLACE_DEVICE_NAME
+gcons PREPLACE_DEVICE_NAME
+
+====
+WINDOW PREPLACE_DEVICE_NAME_LINUX 2
+====
+pltelnet PREPLACE_DEVICE_NAME
+
+====
+WINDOW PREPLACE_DEVICE_NAME_EXTRA_1 4
+====
+# dummy command for PREPLACE_DEVICE_NAME
+
+====
+WINDOW PREPLACE_EXTRA_1 5
+====
+# extra window 1
+
+====
+WINDOW PREPLACE_EXTRA_2 5
+====
+# extra window 3

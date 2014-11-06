@@ -1,0 +1,36 @@
+#!/bin/bash
+
+#
+# Author: Avaneesh Kadam (avaneesh.kadam@gmail.com)
+#
+# Copyright (c) 2012-2014 by Avaneesh Kadam <avaneesh.kadam@gmail.com>
+#
+# You are free to copy/change/distribute this code as long as
+# this copyright notice is kept intact. Yeah?
+#
+
+
+## WARNING: works on current directory
+
+#
+# Function to store a value in hash table.
+#
+function hput() {
+    file=$1
+    key=$2
+    value=$3
+    if grep -q "^$key " .hashmap.$file 2> /dev/null; then
+        sed -i "s/^$key .*/$key $value/g" .hashmap.$file
+    else
+        echo "$key $value" >> .hashmap.$file
+    fi
+}
+
+#
+# Function to get a value from hash table.
+#
+function hget() {
+    grep "^$2 " .hashmap.$1 | awk '{ print $2 };'
+}
+
+

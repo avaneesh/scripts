@@ -1,0 +1,207 @@
+#!/bin/bash
+
+#
+# Author: Avaneesh Kadam (avaneesh.kadam@gmail.com)
+#
+# Copyright (c) 2012-2014 by Avaneesh Kadam <avaneesh.kadam@gmail.com>
+#
+# You are free to copy/change/distribute this code as long as
+# this copyright notice is kept intact. Yeah?
+#
+
+
+
+# setup logging macros just in case anyone does not source logging framework
+# We ignore everything except v1echo
+alias decho=': echo'
+alias v1echo='echo'
+alias v2echo=': echo'
+alias v3echo=': echo'
+alias v4echo=': echo'
+
+SCRIPTS=~avkadam/bin
+
+############## logging framework related - START
+source $SCRIPTS/myshelllogging
+
+# switch to turn on debug logs 
+debugon=0
+# verbose level can be 0 to n. Currently n is 5.
+current_verbose_level=1
+
+############## logging framework related - END
+
+# other sourcing
+source $SCRIPTS/myhmap
+source $SCRIPTS/psetupfunc.sh
+
+# source config file
+source ~/.psetuprc
+base_readme_filename=$BASE_README_FILENAME
+device_database_cmd=$DEVICE_DATABASE_CMD
+decho "Working with base_readme_filename=$base_readme_filename, device_database_cmd=$device_database_cmd"
+v1echo "Using $base_readme_filename as a base setup format..."
+
+### generally configurables
+
+# Do this before doing anyting else - setup working directory
+PSETUP_DIR=~/psetup
+PSETUP_CURR_DIR=$PSETUP_DIR/.$$
+PSETUP_FINAL_DIR=$PSETUP_DIR/finals
+rm -fr $PSETUP_CURR_DIR
+mkdir -p $PSETUP_CURR_DIR
+cd $PSETUP_CURR_DIR
+
+
+# readme format to be used
+if [[ -z $base_readme_filename ]]; then
+    base_readme_filename=README_psetup_sample_01
+    v1echo "base_readme_filename not provided, working with default: $base_readme_filename"
+fi
+
+if [[ -z $device_database_cmd ]]; then
+    echo "Please provide DEVICE_DATABASE_CMD in .psetuprc"
+    exit
+fi
+
+############ replacement rules:  ###############
+# For replacing dynamically, add DYNAMIC_VAR_actual_var name
+# eg. DYNAMIC_VAR_curr_device will replace with value of 'curr_device'
+## order in which you put then matters if you want to use 'apply_all_transformations'
+put_replacement_value PREPLACE_DEVICE_NAME_LINUX DYNAMIC_VAR_curr_linux_str
+put_replacement_value PREPLACE_DEVICE_NAME_EXTRA DYNAMIC_VAR_curr_extra_str
+put_replacement_value PREPLACE_DEVICE_NAME DYNAMIC_VAR_curr_device
+put_replacement_value PREPLACE_EXTRA EXTRA_WIN
+put_replacement_value PREPLACE_CURR_WINDOW_NUM DYNAMIC_VAR_curr_window_num
+put_replacement_value PREPLACE_README_FILE_TAG readme
+put_replacement_value PREPLACE_README_FILE DYNAMIC_VAR_final_readme_path
+
+## get the value using:
+# $(get_replacement_value PREPLACE_DEVICE_NAME_LINUX)
+
+########## config END
+
+### mostly internal, hopefull non-configurable variables
+
+base_readme_file=$PSETUP_DIR/$base_readme_filename
+
+final_readme=$base_readme_filename.$$.final.part
+final_readme_path="$PSETUP_FINAL_DIR/$final_readme"
+
+preface_part_file=$base_readme_filename.$$.preface.part
+device_part_file=$base_readme_filename.$$.device.part
+extra_part_file=$base_readme_filename.$$.extra.part
+
+curr_file_mode_index=0
+all_file_modes=( preface device extra )
+next_file_grep_pattern_for_modes=( PREPLACE_DEVICE PREPLACE_EXTRA LAST_SHOULD_NEVER_MATCH_XYZ_ENOUGH )
+
+declare -a all_rules
+rule_num=0
+
+######### variables END
+
+
+#### init and cleanup
+
+if [[ $# != 1 ]]; then
+    echo ERROR: Please provide device you want to connect to
+    exit
+fi
+
+if [ ! -d $PSETUP_FINAL_DIR ]; then
+    mkdir $PSETUP_FINAL_DIR
+fi
+
+if [[ -e *.part ]]; then
+    rm *.part
+fi
+
+if [[ ! -e $base_readme_file ]]; then
+    echo "$base_readme_file does not exist... Quitting..."
+    exit
+fi
+
+############# init cleanup END
+
+
+devices=`$device_database_cmd | grep $1 | awk '{split($0,boxes," "); print boxes[1]}'`
+
+v2echo "Got devices: $devices"
+
+device_num=0
+
+for curr_device in $devices
+do
+    ((++device_num))
+    echo Device $device_num: $curr_device
+done
+
+echo Do you want to start test setup for these devices? [y/n]
+read -s -n 1 ans
+
+if [[ $ans != 'y' ]]; then
+    echo Exiting..
+    exit
+fi
+
+decho "Setting up README for $device_num devices..."
+
+###### Now create a readme file using 3 Step procedure:
+
+#### Step 1: Separate out device section from other sections (eg. extra) 
+# of base_readme file
+
+prev_line=""
+ORIG_IFS=$IFS
+IFS=''
+while read line
+do
+    #process_readme_line $line
+    process_readme_line_new $line
+done < $base_readme_file
+IFS=$ORIG_IFS
+
+# first setup the PREPLACE* variables
+
+
+### Step 2: Create device files, apply replacements
+for curr_device in $devices
+do
+    ((++curr_device_num))
+    curr_device_file=$base_readme_filename.$$.device.$curr_device_num.part
+    cp $device_part_file $curr_device_file
+    curr_linux_str=linux_$curr_device_num
+    curr_extra_str=e_$curr_device_num
+    # Apply required transformations now, in proper order
+    replace_this_in_file PREPLACE_DEVICE_NAME_LINUX $curr_device_file
+    replace_this_in_file PREPLACE_DEVICE_NAME_EXTRA $curr_device_file
+    replace_this_in_file PREPLACE_DEVICE_NAME $curr_device_file
+done
+rm $device_part_file
+
+### Create extra file, apply replacements
+# Apply required transformations now
+# Not applying here anything at the moment, applying on final file should be enough
+
+
+#### Step 3: Now create final file by merging all .part files
+cat *preface*.part >> $final_readme
+cat *device*.part >> $final_readme
+cat *extra*.part >> $final_readme
+
+#### Step 4: Apply replacements on final file
+# Note that order in which rules were defined, will be used
+apply_all_transformations $final_readme
+
+#### Step 5: Save it to finals
+cp $final_readme $PSETUP_FINAL_DIR/.
+
+### Step 6: Do the cleanup
+rm -fr $PSETUP_CURR_DIR
+cd $PSETUP_FINAL_DIR
+
+#### Step n: Finally trigger snscreen
+snscreen ${final_readme#README_} $1
+
+####################################    END of script  #############################
