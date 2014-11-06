@@ -7,6 +7,7 @@ USER_BIN_DIR=~/bin
 SRC_BIN_DIR=~avkadam/bin
 
 if [[ ! -d $PSETUP_DIR ]]; then
+    echo Creating $PSETUP_DIR ..
     mkdir $PSETUP_DIR
 fi
 

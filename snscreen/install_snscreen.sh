@@ -24,7 +24,12 @@ if [[ ! -d $snscreen_binary_dir ]]; then
 	echo "'$snscreen_binary_dir' does not exist, creating it..."
 	mkdir -p $snscreen_binary_dir
 fi
+
+echo Copying utils/snscreen to $snscreen_binary_dir/.
 cp utils/snscreen $snscreen_binary_dir/.
+
+echo Copying ../shutils/* to $snscreen_binary_dir/.
+cp ../shutils/* $snscreen_binary_dir/.
 
 echo "=================="
 echo "Congratulations!!! snscreen is ready to be used."
