@@ -1,0 +1,159 @@
+export PATH=/router/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/cisco/bin:/users/avkadam/bin:/usr/atria/bin:/auto/ses/bin:/auto/binos-tools/bin/:/auto/ios-snaps/bin:/auto/polaris-pool-tools/bin:$PATH
+export MANPATH=/usr/cisco/man:/usr/man:/usr/atria/doc/man:$MANPATH
+
+#storm10 
+#export trees='/auto/nobackup-bgl-mitg-dev43/avkadam/trees'
+export MY_IWS_TREE='/scratch/avkadam/iwstrees'
+export trees='/scratch/avkadam/trees'
+export bt='/ws/avkadam-bgl/trees/backup'
+#export branch='v121.main'
+export branch='polaris_dev_01'
+
+alias trees='cd $trees'
+alias bt='cd $bt'
+
+
+#alias cr='cd /users/mitgblds/lastest-builds/'
+alias cr='cd /auto/ios-snaps/'
+
+
+export branch_path=$trees/$branch/
+export binos_path=$trees/$branch/binos
+export ios_path=$trees/$branch/ios/sys
+export BINOS_ROOT=$binos_path
+
+export pk=$trees/$branch/master/packages
+
+alias v='cd $branch_path'
+alias b='cd $binos_path'
+alias i='cd $ios_path'
+alias dp='cd $binos_path/cpp'
+alias mcp='cd $ios_path/mcp'
+alias btty='cd $binos_path/access/ttymon/src'
+alias hman='cd $binos_path/hman/src'
+alias wcm='cd $binos_path/wcm/gate'
+
+alias pk='cd $trees/$branch/master/packages'
+alias ccpu='cd $trees/$branch/master/packages/ccpu'
+alias box='cd $trees/$branch/master/packages/boxer'
+alias gtpc='cd $trees/$branch/master/packages/boxer/sess/sgsn/sgsn-app/gtp_c/'
+alias mt='cd $trees/$branch/master/packages/boxer/sess/pdg/micro-tunnel/mtapp/'
+alias smgr='cd $trees/$branch/master/packages/boxer/sess/smgr/'
+alias sgtpc='cd $trees/$branch/master/packages/boxer/sess/sgsn/sgtpcmgr'
+alias mbms='cd $trees/$branch/master/packages/boxer/sess/sgsn/sgsn-app/mbms'
+alias tools='cd $trees/$branch/master/packages/boxer/sgsn/tools'
+alias sae='cd $trees/$branch/master/packages/boxer/lte/sae_sim'
+alias sbin='cd $trees/$branch/master/assembly-debug/x86/usr/sbin'
+
+#export PYTHONPATH=${PYTHONPATH}:"$trees/$branch/master/packages/boxer/lte/sae_sim"
+#export PYTHONPATH=${PYTHONPATH}:"$trees/$branch/master/packages/boxer/lte/dia_sim"
+
+export EDITOR=vi
+export TAGS_TYPE=ctags
+
+#if [ "$REMOTEHOST" ]; then
+#  DISPLAY=$REMOTEHOST:0.0
+#  echo  DISPLAY set to $REMOTEHOST:0.0
+#fi
+    
+#export DISPLAY=10.4.2.64:0.0
+#export DISPLAY=10.4.2.61:0.0
+#export DISPLAY=10.4.3.74:0.0
+#export DISPLAY=10.4.101.22:0.0
+#export DISPLAY=INDITSGSN358:0.0
+
+
+set ts=4
+umask 002
+
+alias sc='screen -t'
+alias sct='screen -c $HOME/.screenrc_setup_current'
+alias bd='bk difftool &'
+alias cl='bk sfiles -lg'
+alias bcl='bk changes -L'
+alias bcr='bk changes -R'
+alias bcm='bk changes -uavkadam'
+alias rdu='rolldown && rollup --nobuild'
+
+
+#general
+alias gdb='gdb -x /ws/avkadam-bgl/.gdbinit_$branch'
+alias ll='ls -hlF --color'
+alias ls='ls -hF --color'
+#alias cscope='/usr/bin/cscope'
+#alias cs='/usr/bin/cscope -d'
+alias cs='cscope -d'
+#alias vi='vi -O2'
+alias vi='vim'
+
+export GNATSDB=gnats.sw.starentnetworks.com:1529:ST16:avkadam
+export GNATSDOWNLOAD=$HOME/Debug
+
+_view=`cat ~/current_view | cut -d'-' -f2`
+#_view=$branch
+export PS1='$_view@\h:\w\$ '
+
+#TCL test scripts requirements
+########export SGSN_RC=1
+########export HLR_RC=1
+
+#######export PYTHONPATH=/home/mmehra/lib/python
+#######for i in `ypcat hosts | awk '{print $2}' `; do alias $i="ssh $i"; done
+
+machine_name=`uname -a | cut -d" " -f2`
+
+alias ds='cat ~/_display_file'
+
+alias swt1='export tmp_tree=$trees'
+alias swt2='export trees=$bt'
+alias swt3='export bt=$tmp_tree'
+alias swt='swt1 && swt2 && swt3 && box'
+
+
+#cisco specific
+#source /auto/mitg-sw/config/env.sh
+#export ws=/ws/avkadam-bgl
+export ws=/ws/avkadam-sjc
+alias ws='cd $ws'
+
+alias ct='cleartool'
+
+export ACME_AUTO_COMP_RECURSE=1                                                                                                                                                                                                           
+export ACME_CRLF_CHAR_CHECK=0                                                                                                                                                                                                             
+#export ACME_SOURCE_BASE=aesop
+export ACME_SKIPPED_TOUCHED=1                                                                                                                                                                                                             
+#export ACME_VIEW_SERVER=mcebu-view6
+#export ACME_DISABLE_COPYRIGHT=1                                                                                                                                                                                                           
+export LANG=en_US
+export LANG_VAR=en_US
+alias  linux_neo="acme nw -lineup cwan/all-cwan_neo_mobility_dev.lu"
+
+alias lsco="ct lsco -avobs -cview -short"
+
+alias pwv="ct pwv"
+
+alias vob="cd /vob/ios/sys"
+
+alias sb='source ~/bin/select_branch'
+alias sbt='source ~/bin/select_branch fake_arg youpick'
+alias sv='source ~/bin/select_view'
+
+bind '"\C-f": beginning-of-line'
+
+alias mygreenv='mkgreenv polaris_dev $branch --vsd-ios=$branch_path --vsd-binos=$branch_path'
+alias mybgreenv='mkgreenv polaris_dev $branch --vsd-binos=$branch_path --view-type=binos'
+alias myigreenv='mkgreenv polaris_dev $branch --vsd-ios=$branch_path --view-type=ios'
+alias bell='echo -en "\007"'
+
+alias makek="make_katana"
+
+_POLARIS_POOL_PATH="/auto/polaris-pool-tools/bin"
+alias ppool="$_POLARIS_POOL_PATH/showlocks"
+alias plock="$_POLARIS_POOL_PATH/machlock"
+alias pwhichcon="$_POLARIS_POOL_PATH/rwhere"
+alias pcon="$_POLARIS_POOL_PATH/gcons"
+
+
+#printf "\n         selected branch $branch\n"
+
+#screen -x
