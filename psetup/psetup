@@ -202,6 +202,9 @@ rm -fr $PSETUP_CURR_DIR
 cd $PSETUP_FINAL_DIR
 
 #### Step n: Finally trigger snscreen
-snscreen ${final_readme#README_} $1
+#snscreen ${final_readme#README_} $1
+
+#### Step n: Finally trigger ptmux
+python ~/bin/ptmux/ptmux.py ${final_readme#README_} $1
 
 ####################################    END of script  #############################

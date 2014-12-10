@@ -1,0 +1,20 @@
+====
+WINDOW PREPLACE_README_FILE_TAG
+====
+vi PREPLACE_README_FILE
+
+====
+WINDOW PREPLACE_DEVICE_NAME
+====
+##ptelnet PREPLACE_DEVICE_NAME
+##pcon PREPLACE_DEVICE_NAME
+##psetup_tmux_connect.sh PREPLACE_DEVICE_NAME
+psetup_tmux_split.sh PREPLACE_DEVICE_NAME
+
+====
+WINDOW PREPLACE_EXTRA_1
+====
+
+====
+WINDOW general
+====

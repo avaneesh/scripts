@@ -1,0 +1,13 @@
+#!/bin/bash
+## arg: session name
+tmux -f $HOME/.tmux.psetup.conf new-session -d -s %s
+
+
+## arg: Windows list
+%s
+
+## arg: session name
+tmux select-window -t %s:1
+## arg: session name
+tmux attach-session -t %s
+
