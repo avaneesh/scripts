@@ -13,7 +13,8 @@ from gi.repository import GExiv2
 # Sample:
 # https://wiki.gnome.org/Projects/gexiv2/PythonSupport
 # Check this guy:
-https://github.com/robru/gottengeography
+# https://github.com/robru/gottengeography
+# https://github.com/robru/gottengeography/blob/master/gg/photos.py
 
 exif = GExiv2.Metadata('img.jpg')
 
