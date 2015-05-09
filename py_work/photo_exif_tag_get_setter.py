@@ -12,6 +12,8 @@ from gi.repository import GExiv2
 
 # Sample:
 # https://wiki.gnome.org/Projects/gexiv2/PythonSupport
+# Check this guy:
+https://github.com/robru/gottengeography
 
 exif = GExiv2.Metadata('img.jpg')
 
