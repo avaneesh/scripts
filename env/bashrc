@@ -31,7 +31,8 @@ alias dp='cd $binos_path/cpp'
 alias mcp='cd $ios_path/mcp'
 alias btty='cd $binos_path/access/ttymon/src'
 alias hman='cd $binos_path/hman/src'
-alias wcm='cd $binos_path/wcm/gate'
+alias cap='cd $binos_path/wcm/gate/lvl7dev/src/application/layer3/capwap/src/'
+alias wcm='cd $binos_path/wcm/gate/lvl7dev'
 
 alias pk='cd $trees/$branch/master/packages'
 alias ccpu='cd $trees/$branch/master/packages/ccpu'
@@ -152,6 +153,23 @@ alias ppool="$_POLARIS_POOL_PATH/showlocks"
 alias plock="$_POLARIS_POOL_PATH/machlock"
 alias pwhichcon="$_POLARIS_POOL_PATH/rwhere"
 alias pcon="$_POLARIS_POOL_PATH/gcons"
+alias pbash="~/bin/get_me_polaris_pool_bash.sh"
+alias pbashed="~/bin/get_me_polaris_pool_bash.sh edison"
+
+#alias tmux="/auto/sw/packages/tmux/1.8/bin/tmux"
+
+alias ptmux="python ~/bin/ptmux/ptmux.py"
+alias tu="tmux new -s"
+
+
+# tmux related
+# resume tmux session - tmux attach -t sess_name
+alias rtm="tmux a -t"
+# get logs - copy from tmux log file
+#alias gl="chmod +r ~/tmux.log; cp ~/tmux.log"
+alias gl="~/bin/get_logs.sh"
+
+alias whichcobalt="acme pull -sb xe -dl polaris_dev -lbt list"
 
 
 #printf "\n         selected branch $branch\n"
