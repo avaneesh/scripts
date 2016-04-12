@@ -169,8 +169,9 @@ alias rtm="tmux a -t"
 #alias gl="chmod +r ~/tmux.log; cp ~/tmux.log"
 alias gl="~/bin/get_logs.sh"
 
-alias whichcobalt="acme pull -sb xe -dl polaris_dev -lbt list"
 
+alias cw="cd /mnt/capsule/Work/homelab/"
+alias pit="ipython qtconsole --colors=linux"
 
 #printf "\n         selected branch $branch\n"
 
