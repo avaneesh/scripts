@@ -18,8 +18,15 @@ send_myemail()
   rm $MAIL_BODY_FILE
 }
 
-my_ip=`ifconfig eth0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`
-echo my ip is $my_ip
-SUBJECT_L="avkrpi $my_ip"
+SUBJECT_L=""
+SUBJECT_L=$SUBJECT_L"avkrpi"
+dev="eth0"
+my_ip=`ifconfig $dev 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`
+echo my $dev ip is $my_ip
+SUBJECT_L=$SUBJECT_L" $dev $my_ip"
+dev="wlan0"
+my_ip=`ifconfig $dev 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`
+echo my $dev ip is $my_ip
+SUBJECT_L=$SUBJECT_L" $dev $my_ip"
 
 send_myemail avaneesh.kadam@gmail.com SUBJECT_L

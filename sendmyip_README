@@ -10,6 +10,9 @@ hostname=raspberrypi
 AuthUser=name@gmail.com
 AuthPass=pass
 
+more at:
+http://iqjar.com/jar/sending-emails-from-the-raspberry-pi/
+
 ===================
 Trigger:
 Edit /etc/network/interfaces
