@@ -1,0 +1,17 @@
+======= Configure mail server:
+
+sudo apt-get install mailutils
+sudo apt-get install ssmtp
+
+/etc/ssmtp/ssmtp.conf
+root=postmaster
+mailhub=smtp.gmail.com:587
+hostname=raspberrypi
+AuthUser=name@gmail.com
+AuthPass=pass
+
+===================
+Trigger:
+Edit /etc/network/interfaces
+Add following line at the end:
+post-up /home/pi/bin/sendmyip.sh
