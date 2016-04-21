@@ -18,3 +18,13 @@ Trigger:
 Edit /etc/network/interfaces
 Add following line at the end:
 post-up /home/pi/bin/sendmyip.sh
+/etc/init.d/network restart
+
+OR:
+Put the script in:
+/etc/network/if-up.d/sendmyip
+
+service network-manager restart
+
+
+===
