@@ -173,6 +173,9 @@ alias gl="~/bin/get_logs.sh"
 alias cw="cd /mnt/capsule/Work/homelab/"
 alias pit="ipython qtconsole --colors=linux"
 
+alias bld="ssh mcp-bld-lnx-163"
+alias ads="ssh sjc-ads-439"
+
 #printf "\n         selected branch $branch\n"
 
 #screen -x
